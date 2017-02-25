@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>IFE JavaScript Task 01</title>
+</head>
+
+<body>
+    <h3>污染城市列表</h3>
+    <ul id="aqi-list">
+        <!--   
+    <li>第一名：福州（样例），10</li>
+      <li>第二名：福州（样例），10</li> -->
+    </ul>
+    <script type="text/javascript">
+    var aqiData = [
+        ["北京", 90],
+        ["上海", 50],
+        ["福州", 10],
+        ["广州", 50],
+        ["成都", 90],
+        ["西安", 100]
+    ];
+    var dataArr = [];
+    var count = 0; //空气质量指数大于60的计数
+    (function() {
+
+        /*
+        在注释下方编写代码
+        遍历读取aqiData中各个城市的数据
+        将空气质量指数大于60的城市显示到aqi-list的列表中
+        */
+
+        /**
+         * [$id 根据指定的 id 属性值得到对象。返回 id 属性值等于 idName 的第一个对象的引用]
+         * @param  {[string]} idName [id值]
+         * @return {[object]}     [description]
+         */
+        function $id(idName) {
+            return id = document.getElementById(idName);
+        }
+        /**
+         * [desc 降序]
+         * @param  {[number]} a [description]
+         * @param  {[number]} b [description]
+         * @return {[array]}   [降序的数组]
+         */
+        function desc(a, b) {
+            return a[1] < b[1];
+        }
+        /**
+         * [addElement 动态添加数据]
+         * @param {[array]} data [经过降序排序的数组]
+         */
+        function addElement(data) {
+            for (var i = 0; i < data.length; i++) {
+                if (data[i][1] > 60 || data[i][1] == 60) {
+                    count++;
+                    var el = "<li>" + count + ":" + data[i][0] + "," + data[i][1] + "</li>";
+                    list.innerHTML += el;
+                }
+            }
+            return list;
+        }
+
+        var list = $id("aqi-list");
+        for (var i = 0; i < aqiData.length; i++) {
+            dataArr.push(aqiData[i]);
+        }
+
+        dataArr.sort(desc);
+        addElement(dataArr);
+    })();
+    </script>
+</body>
+
+</html>
