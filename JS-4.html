@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style type="text/css">
+    #option {
+        margin-bottom: 10px;
+    }
+    
+    input[type="text"] {
+        outline: none;
+    }
+    
+    .item {
+        margin-right: 5px;
+        padding: 5px 10px;
+        background: red;
+        cursor: pointer;
+    }
+    </style>
+</head>
+
+<body>
+    <!-- 
+模拟一个队列，队列的每个元素是一个数字，初始队列为空
+有一个input输入框，以及4个操作按钮
+
+点击"左侧入"，将input中输入的数字从左侧插入队列中；
+点击"右侧入"，将input中输入的数字从右侧插入队列中；
+点击"左侧出"，读取并删除队列左侧第一个元素，并弹窗显示元素中数值；
+点击"右侧出"，读取并删除队列又侧第一个元素，并弹窗显示元素中数值；
+点击队列中任何一个元素，则该元素会被从队列中删除
+ -->
+    <div id="option">
+        <input type="text" name="num" id="num" placeholder="请输入数字">
+        <button id="leftUnshift">左侧入</button>
+        <button id="rightPush">右侧入</button>
+        <button id="leftPop">左侧出</button>
+        <button id="rightShift">右侧出</button>
+    </div>
+    <div id="queueList">
+    </div>
+    <script type="text/javascript">
+    (function() {
+        /**
+         * [$id 根据指定的 id 属性值得到对象。返回 id 属性值等于 idName 的第一个对象的引用]
+         * @param  {[string]} idName [id值]
+         * @return {[object]}     [description]
+         */
+        function $id(idName) {
+            return document.getElementById(idName);
+        }
+        /**
+         * [checkInput 检查输入框值的合法性]
+         * @param  {[object]} dom [dom元素]
+         * @return {[number或boolean]}     [value值合法，则返回value，否则返回false]
+         */
+        function checkInput(dom) {
+            var value = dom.value;
+            if (isNaN(value) === false) {
+                return value;
+            } else {
+                alert("请输入有效数字！");
+                dom.value = '';
+                return false;
+            }
+        }
+        /**
+         * [createEl 创建span元素]
+         * @param  {[string]} ele   [html元素]
+         * @param  {[number]} value [html标签的内容]
+         * @return {[object]} element [dom元素]
+         */
+        function createEl(ele, value) {
+            var element = document.createElement(ele);
+            element.className = "item";
+            element.innerHTML = value;
+            return element;
+        }
+        /**
+         * [leftUnshift 左侧入]
+         * @param  {[object]} dom    [输入框值]
+         * @param  {[object]} parent [父级元素]
+         * @return {[boolean]}        [true]
+         */
+        function leftUnshift(dom, parent) {
+            var value = checkInput(dom);
+            if (value) {
+                var parentNode = $id(parent);
+                var span = createEl('span', value);
+                var spanEles = parentNode.getElementsByTagName("span");
+                parentNode.insertBefore(span, spanEles[0]);
+            }
+            return true;
+        }
+        /**
+         * [rightPush 右侧入]
+         * @param  {[object]} dom    [输入框值]
+         * @param  {[object]} parent [父级元素]
+         * @return {[boolean]}        [true]
+         */
+        function rightPush(dom, parent) {
+            var value = checkInput(dom);
+            if (value) {
+                var parentNode = $id(parent);
+                var span = createEl('span', value);
+                parentNode.appendChild(span);
+            }
+            return true;
+        }
+        /**
+         * [leftPop 左侧出]
+         * @param  {[object]} parent [父级元素]
+         * @return {[boolean]}        [true]
+         */
+        function leftPop(parent) {
+            var parentNode = $id(parent);
+            var spanEles = parentNode.getElementsByTagName("span");
+            alert(spanEles[0].innerHTML);
+            parentNode.removeChild(spanEles[0]);
+        }
+        /**
+         * [rightShift 右侧出]
+         * @param  {[object]} parent [父级元素]
+         * @return {[boolean]}        [true]
+         */
+        function rightShift(parent) {
+            var parentNode = $id(parent);
+            var spanEles = parentNode.getElementsByTagName("span");
+            var spanLen = spanEles.length;
+            alert(spanEles[spanLen - 1].innerHTML);
+            parentNode.removeChild(spanEles[spanLen - 1]);
+        }
+        /**
+         * [removeElement 删除dom元素]
+         * @param  {[object]} _element [dom元素]
+         * @return {[boolean]}          [description]
+         */
+        function removeElement(_element) {
+            var _parentElement = _element.parentNode;
+            if (_parentElement) {
+                _parentElement.removeChild(_element);
+            }
+        }
+        /**
+         * [deleteEle 点击队列中任何一个元素，则该元素会被从队列中删除]
+         * @param  {[object]} parent [父级元素]
+         * @return {[boolean]}        [true]
+         */
+        function deleteEle(parent) {
+            var parentNode = $id(parent);
+            var spanEles = parentNode.getElementsByTagName("span");
+            var spanLen = spanEles.length;
+            console.log(spanEles);
+            for (var i = 0; i < spanEles.length; i++) {
+                spanEles[i].onclick = function() {
+                    removeElement(this);
+                }
+            }
+            return true;
+        }
+        var o_number = $id("num");
+        $id('leftUnshift').onclick = function() {
+            leftUnshift(o_number, 'queueList');
+            deleteEle('queueList');
+        };
+        $id('rightPush').onclick = function() {
+            rightPush(o_number, 'queueList');
+            deleteEle('queueList');
+        };
+        $id("leftPop").onclick = function() {
+            leftPop('queueList');
+            deleteEle('queueList');
+        }
+        $id("rightShift").onclick = function() {
+            rightShift('queueList');
+            deleteEle('queueList');
+        }
+    })();
+    </script>
+</body>
+
+</html>
